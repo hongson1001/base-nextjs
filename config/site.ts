@@ -1,41 +1,12 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Admin Panel",
-  description: "Administration dashboard",
+  name: "My App",
+  description: "Base Next.js project template",
   navItems: [
     {
-      label: "Dashboard",
+      label: "Home",
       href: "/",
-      icon: "dashboard",
-    },
-    {
-      label: "Users",
-      href: "/users",
-      icon: "users",
-    },
-    {
-      label: "Settings",
-      href: "/settings",
-      icon: "settings",
-    },
-  ],
-  navMenuItems: [
-    {
-      label: "Dashboard",
-      href: "/",
-    },
-    {
-      label: "Users",
-      href: "/users",
-    },
-    {
-      label: "Settings",
-      href: "/settings",
-    },
-    {
-      label: "Logout",
-      href: "/logout",
     },
   ],
 };
