@@ -7,7 +7,6 @@ import { Provider as ReduxProvider } from "react-redux";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 import { store } from "@/stores/store";
-import { AppToastContainer } from "@/components/common/app-toast";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -17,10 +16,7 @@ export interface ProvidersProps {
 export function Providers({ children, themeProps }: ProvidersProps) {
   return (
     <ReduxProvider store={store}>
-      <NextThemesProvider {...themeProps}>
-        {children}
-        <AppToastContainer />
-      </NextThemesProvider>
+      <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
     </ReduxProvider>
   );
 }

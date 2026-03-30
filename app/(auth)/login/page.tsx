@@ -3,17 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  Separator,
-} from "@heroui/react";
 
-import { AppInput } from "@/components/common/app-input";
-import { AppButton } from "@/components/common/app-button";
 import { useLoginMutation } from "@/stores/api/auth-api";
 import { Logo } from "@/components/icons";
 
@@ -41,58 +31,69 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader className="flex flex-col items-center gap-2 pb-0 pt-6">
+    <div className="w-full rounded-xl border border-default-200 bg-content1 p-6 shadow-sm">
+      <div className="mb-6 flex flex-col items-center gap-2">
         <Logo size={48} />
-        <CardTitle>Sign In</CardTitle>
-        <CardDescription>Enter your credentials to continue</CardDescription>
-      </CardHeader>
-      <Separator className="my-4" />
-      <CardContent className="px-6 pb-6">
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-          {apiError && (
-            <div className="rounded-lg bg-danger-50 p-3 text-sm text-danger">
-              {apiError}
-            </div>
-          )}
+        <h1 className="text-xl font-semibold">Sign In</h1>
+        <p className="text-sm text-default-500">
+          Enter your credentials to continue
+        </p>
+      </div>
 
-          <AppInput
-            isRequired
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        {apiError && (
+          <div className="rounded-lg bg-danger-50 p-3 text-sm text-danger">
+            {apiError}
+          </div>
+        )}
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium" htmlFor="email">
+            Email
+          </label>
+          <input
+            required
             autoComplete="email"
-            label="Email"
+            className="rounded-lg border border-default-300 bg-default-100 px-3 py-2 text-sm outline-none transition-colors focus:border-primary"
+            id="email"
             placeholder="Enter your email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+        </div>
 
-          <AppInput
-            isRequired
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium" htmlFor="password">
+            Password
+          </label>
+          <input
+            required
             autoComplete="current-password"
-            label="Password"
+            className="rounded-lg border border-default-300 bg-default-100 px-3 py-2 text-sm outline-none transition-colors focus:border-primary"
+            id="password"
             placeholder="Enter your password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+        </div>
 
-          <AppButton
-            className="mt-2"
-            isLoading={isLoading}
-            type="submit"
-            variant="primary"
-          >
-            Sign In
-          </AppButton>
+        <button
+          className="mt-2 w-full rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+          disabled={isLoading}
+          type="submit"
+        >
+          {isLoading ? "Signing in..." : "Sign In"}
+        </button>
 
-          <p className="text-center text-sm text-default-500">
-            Don&apos;t have an account?{" "}
-            <Link className="text-primary hover:underline" href="/register">
-              Register
-            </Link>
-          </p>
-        </form>
-      </CardContent>
-    </Card>
+        <p className="text-center text-sm text-default-500">
+          Don&apos;t have an account?{" "}
+          <Link className="text-primary hover:underline" href="/register">
+            Register
+          </Link>
+        </p>
+      </form>
+    </div>
   );
 }

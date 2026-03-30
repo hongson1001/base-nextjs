@@ -1,11 +1,7 @@
-"use client";
-
-import { Spinner } from "@heroui/react";
-
 export default function AdminLoading() {
   return (
     <div className="flex h-full min-h-[400px] items-center justify-center">
-      <Spinner size="lg" />
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
     </div>
   );
 }

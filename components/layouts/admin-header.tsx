@@ -1,19 +1,7 @@
 "use client";
 
-import {
-  Avatar,
-  AvatarFallback,
-  Dropdown,
-  DropdownTrigger,
-  DropdownPopover,
-  DropdownMenu,
-  DropdownItem,
-  Badge,
-  BadgeAnchor,
-  BadgeLabel,
-  Button,
-} from "@heroui/react";
 import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
 
 import { ThemeSwitch } from "@/components/theme-switch";
 import { useAppSelector } from "@/stores/hooks";
@@ -23,6 +11,8 @@ export function AdminHeader() {
   const router = useRouter();
   const user = useAppSelector((state) => state.auth.user);
   const [logout] = useLogoutMutation();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = async () => {
     try {
@@ -42,66 +32,56 @@ export function AdminHeader() {
         .slice(0, 2)
     : "U";
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <header className="flex h-16 items-center justify-end gap-4 border-b border-divider bg-background/70 px-6 backdrop-blur-md">
       <ThemeSwitch />
 
-      <Badge color="danger" size="sm">
-        <BadgeAnchor>
-          <button
-            aria-label="Notifications"
-            className="text-default-500 hover:text-foreground transition-colors"
-          >
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        </BadgeAnchor>
-        <BadgeLabel>3</BadgeLabel>
-      </Badge>
+      <div ref={menuRef} className="relative">
+        <button
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {initials}
+        </button>
 
-      <Dropdown>
-        <DropdownTrigger>
-          <Button isIconOnly className="rounded-full" variant="ghost">
-            <Avatar size="sm">
-              <AvatarFallback>{initials}</AvatarFallback>
-            </Avatar>
-          </Button>
-        </DropdownTrigger>
-        <DropdownPopover>
-          <DropdownMenu>
-            <DropdownItem id="profile-info" textValue="Profile info">
-              <div className="py-1">
-                <p className="font-semibold">{user?.fullName ?? "User"}</p>
-                <p className="text-sm text-default-500">{user?.email}</p>
-              </div>
-            </DropdownItem>
-            <DropdownItem
-              id="settings"
-              onAction={() => router.push("/settings")}
+        {menuOpen && (
+          <div className="absolute right-0 top-10 z-50 w-48 rounded-lg border border-default-200 bg-content1 py-1 shadow-lg">
+            <div className="border-b border-default-200 px-3 py-2">
+              <p className="text-sm font-semibold">
+                {user?.fullName ?? "User"}
+              </p>
+              <p className="text-xs text-default-500">{user?.email}</p>
+            </div>
+            <button
+              className="w-full px-3 py-2 text-left text-sm hover:bg-default-100"
+              onClick={() => {
+                setMenuOpen(false);
+                router.push("/settings");
+              }}
             >
               Settings
-            </DropdownItem>
-            <DropdownItem
-              className="text-danger"
-              id="logout"
-              onAction={handleLogout}
+            </button>
+            <button
+              className="w-full px-3 py-2 text-left text-sm text-danger hover:bg-default-100"
+              onClick={handleLogout}
             >
               Log Out
-            </DropdownItem>
-          </DropdownMenu>
-        </DropdownPopover>
-      </Dropdown>
+            </button>
+          </div>
+        )}
+      </div>
     </header>
   );
 }
